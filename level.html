@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="level.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="progress.html">PROGRESS</a></li>
+            <li><a href="level.html">LEVEL</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <div class="header-row">
+            <h1>Level</h1>
+        </div>
+        <h2>Your rewards and level</h2>
+
+        <div class="reward-card">
+            <div class="reward-header">
+                <div>
+                    <h3>Daily Rewards</h3>
+                    <p class="reward-subtitle">Complete tasks and earn coins.</p>
+                </div>
+                <div class="coin-badge" aria-label="Coins">
+                    <span class="coin-icon" aria-hidden="true"></span>
+                    <span id="coin-count" class="coin-count">0</span>
+                </div>
+            </div>
+
+            <p class="reward-rule">Complete all tasks in a day to earn <strong>100 coins</strong>.</p>
+            <p class="reward-rule">Reach <strong>500 coins</strong> to unlock <strong>Level 1</strong>.</p>
+
+            <div class="level-box">
+                <div class="level-label">Current Level</div>
+                <div id="level-value" class="level-value">0</div>
+            </div>
+        </div>
+    </div>
+    <script src="level.js"></script>
+</body>
+
+</html>

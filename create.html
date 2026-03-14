@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="create.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="progress.html">PROGRESS</a></li>
+            <li><a href="level.html">LEVEL</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+        </ul>
+    </nav>
+
+    <form class="form">
+        <a class="close-btn" href="index.html" aria-label="Close">×</a>
+        <h2>Create Your Study Plan</h2>
+
+        <div class="field">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="subjects-header">
+            <label>Subjects and Topics</label>
+            <div class="header-actions">
+                <button type="reset" class="button clear-btn">Clear All</button>
+                <button type="button" class="button add-btn">Add Subject</button>
+            </div>
+        </div>
+        <div class="subjects" aria-live="polite">
+            <div class="subject-group" data-required="true">
+                <input type="text" name="subjects[]" placeholder="Subject" required>
+                <input type="text" name="topics[]" placeholder="Topic" required>
+                <button type="button" class="remove-btn" aria-label="Remove subject">Remove</button>
+            </div>
+        </div>
+        <p class="hint">Add more rows as needed, like a daily planner.</p>
+
+        <button type="submit" class="button primary">Save Plan</button>
+    </form>
+
+    <template id="subject-template">
+        <div class="subject-group">
+            <input type="text" name="subjects[]" placeholder="Subject">
+            <input type="text" name="topics[]" placeholder="Topic">
+            <button type="button" class="remove-btn" aria-label="Remove subject">Remove</button>
+        </div>
+    </template>
+
+
+    <script src="create.js"></script>
+</body>
+
+</html>

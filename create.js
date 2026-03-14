@@ -1,0 +1,137 @@
+const form = document.querySelector(".form");
+const addBtn = document.querySelector(".add-btn");
+const subjects = document.querySelector(".subjects");
+const template = document.getElementById("subject-template");
+const storageKey = "studyPlans";
+const editKey = "editPlanDate";
+
+function addRow() {
+    const node = template.content.cloneNode(true);
+    subjects.appendChild(node);
+}
+
+function addRowWithValues(subject, topic, done) {
+    const node = template.content.cloneNode(true);
+    const row = node.querySelector(".subject-group");
+    const inputs = node.querySelectorAll("input");
+    if (inputs[0]) inputs[0].value = subject;
+    if (inputs[1]) inputs[1].value = topic;
+    if (row) row.dataset.done = done ? "true" : "false";
+    subjects.appendChild(node);
+}
+
+function loadPlans() {
+    return JSON.parse(localStorage.getItem(storageKey) || "[]");
+}
+
+function prefillForEdit() {
+    const editDate = localStorage.getItem(editKey);
+    if (!editDate) return;
+
+    const plans = loadPlans();
+    const plan = plans.find((p) => p.date === editDate);
+    if (!plan) return;
+
+    const title = document.querySelector(".form h2");
+    if (title) title.textContent = "Edit Your Study Plan";
+
+    const dateInput = document.getElementById("date");
+    if (dateInput) dateInput.value = plan.date;
+
+    subjects.innerHTML = "";
+
+    plan.items.forEach((item, index) => {
+        if (index === 0) {
+            const row = document.createElement("div");
+            row.className = "subject-group";
+            row.dataset.required = "true";
+            row.dataset.done = item.done ? "true" : "false";
+            row.innerHTML = `
+                <input type="text" name="subjects[]" placeholder="Subject" required>
+                <input type="text" name="topics[]" placeholder="Topic" required>
+                <button type="button" class="remove-btn" aria-label="Remove subject">Remove</button>
+            `;
+            const inputs = row.querySelectorAll("input");
+            if (inputs[0]) inputs[0].value = item.subject;
+            if (inputs[1]) inputs[1].value = item.topic;
+            subjects.appendChild(row);
+        } else {
+            addRowWithValues(item.subject, item.topic, item.done);
+        }
+    });
+}
+
+subjects.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("remove-btn")) return;
+    const row = e.target.closest(".subject-group");
+    if (!row || row.dataset.required === "true") return;
+    row.remove();
+});
+
+addBtn.addEventListener("click", () => {
+    addRow();
+});
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const rows = Array.from(subjects.querySelectorAll(".subject-group"));
+    const dateInput = document.getElementById("date");
+    const dateValue = dateInput ? dateInput.value : "";
+    const items = [];
+
+    for (const row of rows) {
+        const inputs = row.querySelectorAll("input");
+        const subject = inputs[0].value.trim();
+        const topic = inputs[1].value.trim();
+        const hasAny = subject.length > 0 || topic.length > 0;
+
+        if (!hasAny && row.dataset.required !== "true") {
+            row.remove();
+            continue;
+        }
+
+        if (hasAny && (!subject || !topic)) {
+            alert("Please fill both Subject and Topic for each row.");
+            return;
+        }
+
+        if (subject && topic) {
+            const done = row.dataset.done === "true";
+            items.push({ subject, topic, done });
+        }
+    }
+
+    if (!dateValue) {
+        alert("Please select a date.");
+        return;
+    }
+
+    if (items.length === 0) {
+        alert("Please add at least one subject and topic.");
+        return;
+    }
+
+    const existing = loadPlans();
+    const editDate = localStorage.getItem(editKey);
+    let next = existing.filter((plan) => plan.date !== dateValue);
+
+    if (editDate && editDate === dateValue) {
+        next.push({ date: dateValue, items });
+    } else {
+        const current = existing.find((plan) => plan.date === dateValue);
+        if (current) {
+            const mergedItems = current.items.concat(items);
+            next = next.filter((plan) => plan.date !== dateValue);
+            next.push({ date: dateValue, items: mergedItems });
+        } else {
+            next.push({ date: dateValue, items });
+        }
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(next));
+    localStorage.removeItem(editKey);
+
+    window.location.href = "index.html";
+});
+
+prefillForEdit();
