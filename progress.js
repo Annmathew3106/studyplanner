@@ -243,12 +243,16 @@ function renderLineChart(target, data, labelMode = "short") {
     target.innerHTML = "";
     if (!data.length) return;
 
-    const width = Math.max(600, data.length * 100);
+    const isSingle = data.length === 1;
+    const mode = target?.getAttribute("data-mode") || "";
+    const perPoint = mode === "monthly" ? 120 : 100;
+    const width = Math.max(600, data.length * perPoint);
     const height = 260;
     const padding = 36;
+    const singleOffset = isSingle ? 40 : 0;
 
     const points = data.map((row, index) => {
-        const x = padding + (index * (width - padding * 2)) / (data.length - 1 || 1);
+        const x = padding + singleOffset + (index * (width - padding * 2 - singleOffset)) / (data.length - 1 || 1);
         const ratio = row.total ? row.done / row.total : 0;
         const clamped = Math.min(1, Math.max(0, ratio));
         const y = height - padding - clamped * (height - padding * 2);
@@ -267,7 +271,7 @@ function renderLineChart(target, data, labelMode = "short") {
         const labelValue = 100 - i * 25;
         const y = padding + (i * (height - padding * 2)) / 4;
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", padding);
+        line.setAttribute("x1", padding + singleOffset);
         line.setAttribute("x2", width - padding);
         line.setAttribute("y1", y);
         line.setAttribute("y2", y);
@@ -296,7 +300,7 @@ function renderLineChart(target, data, labelMode = "short") {
     } else {
         const single = points[0];
         const flat = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        flat.setAttribute("x1", padding);
+        flat.setAttribute("x1", padding + singleOffset);
         flat.setAttribute("x2", width - padding);
         flat.setAttribute("y1", single.y);
         flat.setAttribute("y2", single.y);
@@ -359,10 +363,11 @@ function updateChart() {
     chartRoot.hidden = !hasAny;
 
     if (hasAny) {
+        chartRoot.setAttribute("data-mode", mode);
         renderLineChart(chartRoot, data, "short");
     }
 
-    if (chartRoot) {
+    if (chartRoot && !hasAny) {
         chartRoot.setAttribute("data-mode", mode);
     }
 

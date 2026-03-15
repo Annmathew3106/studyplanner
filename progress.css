@@ -71,7 +71,7 @@ body {
 
 .line-chart {
     margin-top: 6px;
-    padding: 12px 12px 4px;
+    padding: 12px 12px 8px;
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(255, 247, 251, 0.9) 0%, rgba(255, 231, 244, 0.9) 100%);
     border: 1px solid rgba(243, 181, 214, 0.35);
@@ -148,7 +148,7 @@ body {
 .line-chart svg {
     width: 100%;
     min-width: 420px;
-    height: 260px;
+    height: 300px;
     display: block;
     margin: 0 auto;
 }
@@ -175,15 +175,38 @@ body {
 }
 
 .line-label {
-    font-size: 11px;
-    fill: #5a2f3f;
-    font-weight: 700;
+    font-size: 16px;
+    fill: #4a2232;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 3px;
+}
+
+.line-chart[data-mode="daily"] .line-label {
+    font-size: 22px;
+    letter-spacing: 0.4px;
+}
+
+.line-chart[data-mode="monthly"] .line-label {
+    font-size: 14px;
+    letter-spacing: 0.2px;
 }
 
 .line-axis {
-    font-size: 10px;
-    fill: #8c5970;
-    font-weight: 700;
+    font-size: 16px;
+    fill: #7a3f58;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.8);
+    stroke-width: 3px;
+}
+
+.line-chart[data-mode="daily"] .line-axis {
+    font-size: 30px;
+    letter-spacing: 0.3px;
 }
 
 .line-axis[data-level="100"] {
@@ -335,12 +358,13 @@ body {
 
     .line-chart svg {
         min-width: 320px;
-        height: 220px;
+        height: 260px;
     }
 
     .line-chart {
         padding-left: 16px;
         padding-right: 10px;
+        padding-bottom: 10px;
     }
 
     .progress-meta {
@@ -361,7 +385,7 @@ body {
 
     .line-chart svg {
         min-width: 280px;
-        height: 200px;
+        height: 240px;
     }
 }
 
