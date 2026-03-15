@@ -1,15 +1,40 @@
 body {
     padding-right: 32px;
+    background: radial-gradient(circle at top left, rgba(255, 223, 238, 0.35), transparent 45%);
 }
 
 .progress-card {
     margin-top: 24px;
-    background: linear-gradient(165deg, #ffe9f4 0%, #ffd3e8 100%);
-    border: 1px solid rgba(245, 170, 210, 0.6);
-    border-radius: 18px;
+    background: linear-gradient(160deg, #fff4fb 0%, #ffe0f0 52%, #ffd6ea 100%);
+    border: 1px solid rgba(245, 170, 210, 0.5);
+    border-radius: 22px;
     padding: 24px 22px 30px;
     min-height: 220px;
-    box-shadow: 0 14px 28px rgba(255, 120, 170, 0.2);
+    box-shadow: 0 16px 30px rgba(255, 120, 170, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-card::before {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto auto;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 60%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.progress-card::after {
+    content: "";
+    position: absolute;
+    left: -40px;
+    bottom: -40px;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle, rgba(255, 215, 235, 0.6), transparent 65%);
+    pointer-events: none;
 }
 
 .progress-header {
@@ -22,38 +47,207 @@ body {
 
 .progress-header h3 {
     margin: 0 0 4px;
-    font-size: 18px;
-    color: #5a2f3f;
+    font-size: 19px;
+    color: #542538;
+    letter-spacing: 0.2px;
 }
 
 .progress-subtitle {
     margin: 0;
-    color: #7a495d;
+    color: #7a4359;
     font-size: 13px;
 }
 
 .select-wrap select {
     border: 1px solid #f3b5d6;
     border-radius: 12px;
-    background: #fff0f8;
+    background: linear-gradient(180deg, #fff7fb 0%, #ffeaf5 100%);
     padding: 8px 12px;
     font-family: inherit;
     font-weight: 700;
     color: #5a2f3f;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 6px 12px rgba(255, 166, 205, 0.18);
 }
 
-.basic-progress {
+.line-chart {
+    margin-top: 6px;
+    padding: 12px 12px 4px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 247, 251, 0.9) 0%, rgba(255, 231, 244, 0.9) 100%);
+    border: 1px solid rgba(243, 181, 214, 0.35);
+    overflow-x: auto;
+    min-height: 280px;
+}
+
+.chart-row {
     display: grid;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.chart-row.has-legend {
+    grid-template-columns: minmax(0, 1fr) 240px;
+}
+
+.week-legend {
+    margin-top: 6px;
+    padding: 12px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 247, 251, 0.9) 0%, rgba(255, 231, 244, 0.9) 100%);
+    border: 1px solid rgba(243, 181, 214, 0.35);
+    display: grid;
+    gap: 14px;
+    box-shadow: 0 10px 20px rgba(255, 170, 210, 0.15);
+}
+
+.week-legend-item {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    color: #5a2f3f;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(243, 181, 214, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.week-legend-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.0) 80%);
+    transform: translateX(-120%);
+    animation: legend-shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.week-legend-item::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffb3d9;
+    box-shadow: 0 0 10px rgba(255, 179, 217, 0.8);
+}
+
+.week-legend-item span {
+    font-size: 12px;
+    color: #7a4359;
+    font-weight: 700;
+}
+
+.line-chart svg {
+    width: 100%;
+    min-width: 420px;
+    height: 260px;
+}
+
+.line-grid {
+    stroke: rgba(255, 178, 214, 0.35);
+    stroke-width: 1;
+}
+
+.line-path {
+    fill: none;
+    stroke: #ff8fbe;
+    stroke-width: 3;
+}
+
+.line-area {
+    fill: rgba(255, 175, 214, 0.22);
+}
+
+.line-point {
+    fill: #ffffff;
+    stroke: #ff8fbe;
+    stroke-width: 2;
+}
+
+.line-label {
+    font-size: 11px;
+    fill: #5a2f3f;
+    font-weight: 700;
+}
+
+.line-axis {
+    font-size: 10px;
+    fill: #8c5970;
+    font-weight: 700;
+}
+
+.line-axis[data-level="100"] {
+    fill: #ff6fa9;
+}
+
+.line-axis[data-level="75"] {
+    fill: #ff9f6e;
+}
+
+.line-axis[data-level="50"] {
+    fill: #f1b84b;
+}
+
+.line-axis[data-level="25"] {
+    fill: #6fb7ff;
+}
+
+.line-axis[data-level="0"] {
+    fill: #8c5970;
+}
+
+.line-chart[data-mode="today"] .line-path,
+.line-chart[data-mode="today"] .line-point {
+    stroke: #ff7ab8;
+}
+
+.line-chart[data-mode="today"] .line-area {
+    fill: rgba(255, 122, 184, 0.22);
+}
+
+.line-chart[data-mode="daily"] .line-path,
+.line-chart[data-mode="daily"] .line-point {
+    stroke: #ff9d5c;
+}
+
+.line-chart[data-mode="daily"] .line-area {
+    fill: rgba(255, 157, 92, 0.22);
+}
+
+.line-chart[data-mode="weekly"] .line-path,
+.line-chart[data-mode="weekly"] .line-point {
+    stroke: #6fb7ff;
+}
+
+.line-chart[data-mode="weekly"] .line-area {
+    fill: rgba(111, 183, 255, 0.22);
+}
+
+.line-chart[data-mode="monthly"] .line-path,
+.line-chart[data-mode="monthly"] .line-point,
+.line-chart[data-mode="yearly"] .line-path,
+.line-chart[data-mode="yearly"] .line-point {
+    stroke: #7bd88f;
+}
+
+.line-chart[data-mode="monthly"] .line-area,
+.line-chart[data-mode="yearly"] .line-area {
+    fill: rgba(123, 216, 143, 0.22);
 }
 
 .progress-track {
-    height: 18px;
+    height: 20px;
     border-radius: 999px;
-    background: #fff0f8;
-    border: 1px solid rgba(243, 181, 214, 0.55);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    background: linear-gradient(180deg, #fff7fb 0%, #ffeaf5 100%);
+    border: 1px solid rgba(243, 181, 214, 0.5);
+    box-shadow: inset 0 2px 6px rgba(255, 200, 225, 0.25);
     overflow: hidden;
     position: relative;
 }
@@ -62,14 +256,15 @@ body {
     height: 100%;
     width: 0;
     border-radius: 999px;
-    background: linear-gradient(90deg, #ff9fc5 0%, #ffd86a 100%);
-    box-shadow: 0 8px 16px rgba(255, 168, 205, 0.2);
-    transition: width 380ms ease;
+    background: linear-gradient(90deg, #ff9fcf 0%, #ffc86b 52%, #a7f0ff 100%);
+    box-shadow: 0 10px 18px rgba(255, 168, 205, 0.25);
+    transition: width 420ms ease;
     position: relative;
+    overflow: hidden;
 }
 
 .progress-fill.good {
-    background: linear-gradient(90deg, #ff9fc5 0%, #ffd86a 100%);
+    background: linear-gradient(90deg, #ff9fcf 0%, #ffc86b 52%, #a7f0ff 100%);
 }
 
 .progress-fill::after {
@@ -82,6 +277,16 @@ body {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+.progress-fill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.45) 35%, rgba(255, 255, 255, 0.05) 70%);
+    transform: translateX(-60%);
+    animation: shimmer 2.8s ease-in-out infinite;
+    opacity: 0.7;
 }
 
 .progress-meta {
@@ -109,8 +314,36 @@ body {
         align-items: flex-start;
     }
 
+    .chart-row {
+        grid-template-columns: 1fr;
+    }
+
     .progress-meta {
         flex-direction: column;
         gap: 4px;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-70%);
+    }
+    50% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(70%);
+    }
+}
+
+@keyframes legend-shimmer {
+    0% {
+        transform: translateX(-120%);
+    }
+    50% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(120%);
     }
 }

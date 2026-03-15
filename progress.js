@@ -1,6 +1,8 @@
 const rangeSelect = document.getElementById("range");
 const chartRoot = document.getElementById("chart");
 const emptyState = document.getElementById("empty");
+const weekLegend = document.getElementById("week-legend");
+const chartRow = document.querySelector(".chart-row");
 const storageKey = "studyPlans";
 
 function loadPlans() {
@@ -27,6 +29,19 @@ function addMonths(date, amount) {
     return next;
 }
 
+function startOfDay(date) {
+    const next = new Date(date);
+    next.setHours(0, 0, 0, 0);
+    return next;
+}
+
+function dateKey(date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+}
+
 function formatDay(date) {
     const dd = String(date.getDate()).padStart(2, "0");
     const mm = String(date.getMonth() + 1).padStart(2, "0");
@@ -35,6 +50,10 @@ function formatDay(date) {
 
 function formatMonth(date) {
     return date.toLocaleDateString("en-GB", { month: "short" });
+}
+
+function formatShortDate(date) {
+    return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 }
 
 function getWeekKey(date) {
@@ -58,16 +77,17 @@ function buildDaily(plans) {
 
     for (let i = -13; i <= 14; i += 1) {
         const date = addDays(today, i);
-        const key = date.toISOString().slice(0, 10);
+        const key = dateKey(date);
         days.push({ key, label: formatDay(date), done: 0, total: 0 });
     }
 
     plans.forEach((plan) => {
         const date = parseDate(plan.date);
         if (!date) return;
-        let day = days.find((d) => d.key === plan.date);
+        const key = dateKey(date);
+        let day = days.find((d) => d.key === key);
         if (!day) {
-            day = { key: plan.date, label: formatDay(date), done: 0, total: 0 };
+            day = { key, label: formatDay(date), done: 0, total: 0 };
             days.push(day);
         }
 
@@ -82,11 +102,13 @@ function buildDaily(plans) {
 
 function buildToday(plans) {
     const today = new Date();
-    const key = today.toISOString().slice(0, 10);
+    const key = dateKey(today);
     const row = { key, label: "Today", done: 0, total: 0 };
 
     plans.forEach((plan) => {
-        if (plan.date !== key) return;
+        const date = parseDate(plan.date);
+        if (!date) return;
+        if (dateKey(date) !== key) return;
         plan.items.forEach((item) => {
             row.total += 1;
             if (item.done) row.done += 1;
@@ -100,10 +122,14 @@ function buildWeekly(plans) {
     const today = new Date();
     const weeks = [];
 
-    for (let i = -4; i <= 3; i += 1) {
+    for (let i = -5; i <= 0; i += 1) {
         const date = addDays(today, i * 7);
         const key = getWeekKey(date);
-        weeks.push({ key, label: `W${key.slice(-2)}`, done: 0, total: 0 });
+        const start = weekKeyToStart(key);
+        const end = addDays(start, 6);
+        const shortLabel = `W${key.slice(-2)}`;
+        const fullLabel = `${formatDay(start)}-${formatDay(end)}`;
+        weeks.push({ key, label: shortLabel, fullLabel, done: 0, total: 0 });
     }
 
     plans.forEach((plan) => {
@@ -112,7 +138,11 @@ function buildWeekly(plans) {
         const key = getWeekKey(date);
         let week = weeks.find((w) => w.key === key);
         if (!week) {
-            week = { key, label: `W${key.slice(-2)}`, done: 0, total: 0 };
+            const start = weekKeyToStart(key);
+            const end = addDays(start, 6);
+            const shortLabel = `W${key.slice(-2)}`;
+            const fullLabel = `${formatDay(start)}-${formatDay(end)}`;
+            week = { key, label: shortLabel, fullLabel, done: 0, total: 0 };
             weeks.push(week);
         }
         plan.items.forEach((item) => {
@@ -152,43 +182,161 @@ function buildMonthly(plans) {
     return months;
 }
 
-function renderProgressBar(data) {
-    chartRoot.innerHTML = "";
+function buildWeekOptions(plans) {
+    const today = new Date();
+    const set = new Set();
 
-    const totals = data.reduce(
-        (acc, row) => {
-            acc.done += row.done;
-            acc.total += row.total;
-            return acc;
-        },
-        { done: 0, total: 0 }
-    );
+    for (let i = -4; i <= 3; i += 1) {
+        set.add(getWeekKey(addDays(today, i * 7)));
+    }
 
-    const pct = percent(totals.done, totals.total);
+    plans.forEach((plan) => {
+        const date = parseDate(plan.date);
+        if (!date) return;
+        set.add(getWeekKey(date));
+    });
 
-    const track = document.createElement("div");
-    track.className = "progress-track";
+    return Array.from(set).sort();
+}
 
-    const fill = document.createElement("div");
-    fill.className = "progress-fill";
-    if (pct >= 70) fill.classList.add("good");
-    fill.style.width = `${pct}%`;
-    track.appendChild(fill);
+function buildWeekDays(plans, weekKey) {
+    const weekStart = weekKeyToStart(weekKey);
 
-    const meta = document.createElement("div");
-    meta.className = "progress-meta";
+    const days = [];
+    for (let i = 0; i < 7; i += 1) {
+        const date = addDays(weekStart, i);
+        const key = dateKey(date);
+        days.push({
+            key,
+            label: date.toLocaleDateString("en-GB", { weekday: "short" }),
+            sub: formatShortDate(date),
+            done: 0,
+            total: 0,
+        });
+    }
 
-    const left = document.createElement("span");
-    left.textContent = totals.total ? `${totals.done}/${totals.total} tasks completed` : "No tasks yet";
+    plans.forEach((plan) => {
+        const day = days.find((d) => d.key === plan.date);
+        if (!day) return;
+        plan.items.forEach((item) => {
+            day.total += 1;
+            if (item.done) day.done += 1;
+        });
+    });
 
-    const right = document.createElement("span");
-    right.textContent = `${pct}%`;
+    return days;
+}
 
-    meta.appendChild(left);
-    meta.appendChild(right);
+function weekKeyToStart(weekKey) {
+    const [yearPart, weekPart] = weekKey.split("-W");
+    const weekNo = Number(weekPart);
+    const year = Number(yearPart);
+    const jan4 = new Date(year, 0, 4);
+    const jan4Day = jan4.getDay() || 7;
+    const weekStart = new Date(jan4);
+    weekStart.setDate(jan4.getDate() - (jan4Day - 1) + (weekNo - 1) * 7);
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
+}
 
-    chartRoot.appendChild(track);
-    chartRoot.appendChild(meta);
+function renderLineChart(target, data, labelMode = "short") {
+    target.innerHTML = "";
+    if (!data.length) return;
+
+    const width = Math.max(600, data.length * 100);
+    const height = 260;
+    const padding = 36;
+
+    const points = data.map((row, index) => {
+        const x = padding + (index * (width - padding * 2)) / (data.length - 1 || 1);
+        const ratio = row.total ? row.done / row.total : 0;
+        const clamped = Math.min(1, Math.max(0, ratio));
+        const y = height - padding - clamped * (height - padding * 2);
+        const label = row.label ?? "";
+        const sub = row.sub ?? "";
+        return { x, y, label, sub };
+    });
+
+    const path = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+    const areaPath = `${path} L${points[points.length - 1].x},${height - padding} L${points[0].x},${height - padding} Z`;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    for (let i = 0; i <= 4; i += 1) {
+        const labelValue = 100 - i * 25;
+        const y = padding + (i * (height - padding * 2)) / 4;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", padding);
+        line.setAttribute("x2", width - padding);
+        line.setAttribute("y1", y);
+        line.setAttribute("y2", y);
+        line.setAttribute("class", "line-grid");
+        svg.appendChild(line);
+
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", 10);
+        label.setAttribute("y", y + 4);
+        label.setAttribute("class", "line-axis");
+        label.setAttribute("data-level", String(labelValue));
+        label.textContent = `${labelValue}%`;
+        svg.appendChild(label);
+    }
+
+    if (points.length > 1) {
+        const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        area.setAttribute("d", areaPath);
+        area.setAttribute("class", "line-area");
+        svg.appendChild(area);
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute("d", path);
+        line.setAttribute("class", "line-path");
+        svg.appendChild(line);
+    } else {
+        const single = points[0];
+        const flat = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        flat.setAttribute("x1", padding);
+        flat.setAttribute("x2", width - padding);
+        flat.setAttribute("y1", single.y);
+        flat.setAttribute("y2", single.y);
+        flat.setAttribute("class", "line-path");
+        svg.appendChild(flat);
+    }
+
+    points.forEach((p) => {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", p.x);
+        circle.setAttribute("cy", p.y);
+        circle.setAttribute("r", 4);
+        circle.setAttribute("class", "line-point");
+        svg.appendChild(circle);
+
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", p.x);
+        label.setAttribute("y", height - 8);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("class", "line-label");
+        label.textContent = labelMode === "long" && p.sub ? `${p.label} ${p.sub}` : p.label;
+        svg.appendChild(label);
+    });
+
+    target.appendChild(svg);
+}
+
+function renderWeekLegend(weeks) {
+    if (!weekLegend) return;
+    weekLegend.innerHTML = "";
+    weeks.forEach((week) => {
+        const item = document.createElement("div");
+        item.className = "week-legend-item";
+        item.textContent = week.label;
+
+        const sub = document.createElement("span");
+        sub.textContent = week.fullLabel || "";
+        item.appendChild(sub);
+        weekLegend.appendChild(item);
+    });
 }
 
 function updateChart() {
@@ -211,7 +359,23 @@ function updateChart() {
     chartRoot.hidden = !hasAny;
 
     if (hasAny) {
-        renderProgressBar(data);
+        renderLineChart(chartRoot, data, "short");
+    }
+
+    if (chartRoot) {
+        chartRoot.setAttribute("data-mode", mode);
+    }
+
+    if (weekLegend && chartRow) {
+        if (mode === "weekly" && data.length) {
+            weekLegend.hidden = false;
+            chartRow.classList.add("has-legend");
+            renderWeekLegend(data);
+        } else {
+            weekLegend.hidden = true;
+            weekLegend.innerHTML = "";
+            chartRow.classList.remove("has-legend");
+        }
     }
 }
 

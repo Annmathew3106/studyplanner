@@ -30,6 +30,33 @@ body {
     color: #6b3a4d;
 }
 
+.badge-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffe3f0, #ffcce2);
+    border: 1px solid rgba(245, 182, 214, 0.7);
+    font-size: 12px;
+    font-weight: 800;
+    color: #5a2f3f;
+    letter-spacing: 0.2px;
+    box-shadow: 0 6px 12px rgba(255, 120, 170, 0.18);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
 nav {
     position: fixed;
     top: 0;

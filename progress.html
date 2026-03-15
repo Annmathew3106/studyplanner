@@ -26,26 +26,30 @@
         </div>
         <h2>Track your study consistency</h2>
 
-        <div class="progress-card">
-        <div class="progress-header">
-            <div>
-                <h3>Your Progress</h3>
-                <p class="progress-subtitle">Shows how many tasks you completed over time.</p>
+        <div id="panel-current" class="progress-card">
+            <div class="progress-header">
+                <div>
+                    <h3>Your Progress</h3>
+                    <p class="progress-subtitle">Shows how many tasks you completed over time.</p>
+                </div>
+                <div class="select-wrap">
+                    <label for="range" class="sr-only">Range</label>
+                    <select id="range">
+                        <option value="today">Today</option>
+                        <option value="daily">Daily (28 days around today)</option>
+                        <option value="weekly">Weekly (8 weeks around today)</option>
+                        <option value="monthly">Monthly (12 months around today)</option>
+                    </select>
+                </div>
             </div>
-            <div class="select-wrap">
-                <label for="range" class="sr-only">Range</label>
-                <select id="range">
-                    <option value="today">Today</option>
-                    <option value="daily">Daily (28 days around today)</option>
-                    <option value="weekly">Weekly (8 weeks around today)</option>
-                    <option value="monthly">Monthly (12 months around today)</option>
-                </select>
+
+            <div class="chart-row">
+                <div id="chart" class="line-chart" aria-live="polite"></div>
+                <div id="week-legend" class="week-legend" aria-live="polite" hidden></div>
             </div>
+            <p id="empty" class="empty-state" hidden>No progress data yet. Add plans to see bars here.</p>
         </div>
 
-        <div id="chart" class="basic-progress" aria-live="polite"></div>
-        <p id="empty" class="empty-state" hidden>No progress data yet. Add plans to see bars here.</p>
-        </div>
     </div>
 
     <script src="progress.js"></script>

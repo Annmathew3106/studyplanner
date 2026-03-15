@@ -1,16 +1,65 @@
+html,
+body {
+    min-height: 100%;
+}
+
 body {
     padding-right: 32px;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(255, 209, 231, 0.35), transparent 45%),
+        radial-gradient(circle at 88% 0%, rgba(255, 196, 222, 0.25), transparent 40%),
+        linear-gradient(180deg, #fff9fc 0%, #fff1f7 55%, #ffe8f1 100%);
+    background-attachment: fixed;
 }
 
 .reward-card {
     margin-top: 24px;
-    background: linear-gradient(165deg, #fff3cd 0%, #ffe1a8 100%);
-    border: 1px solid rgba(235, 180, 70, 0.55);
-    border-radius: 18px;
-    padding: 20px 22px 24px;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(165deg, #fff7dc 0%, #ffe4a8 55%, #ffd889 100%);
+    border: 1px solid rgba(235, 180, 70, 0.5);
+    border-radius: 22px;
+    padding: 22px 24px 26px;
+    box-shadow: 0 18px 34px rgba(210, 150, 60, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
     position: relative;
     overflow: hidden;
+}
+
+.reward-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) 60%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: sparkle-float 4s ease-in-out infinite;
+}
+
+.sparkle.s1 {
+    top: 16px;
+    right: 24px;
+    animation-delay: 0s;
+}
+
+.sparkle.s2 {
+    top: 80px;
+    right: 80px;
+    width: 6px;
+    height: 6px;
+    animation-delay: 1.2s;
+}
+
+.sparkle.s3 {
+    bottom: 24px;
+    left: 28px;
+    width: 8px;
+    height: 8px;
+    animation-delay: 2.2s;
 }
 
 .reward-card::before {
@@ -46,8 +95,9 @@ body {
 
 .reward-header h3 {
     margin: 0 0 4px;
-    font-size: 18px;
+    font-size: 19px;
     color: #4b2a1b;
+    letter-spacing: 0.2px;
 }
 
 .reward-subtitle {
@@ -62,9 +112,9 @@ body {
     gap: 8px;
     padding: 8px 12px;
     border-radius: 999px;
-    background: #fff7d6;
+    background: linear-gradient(180deg, #fff8db 0%, #ffe7b8 100%);
     border: 1px solid rgba(235, 180, 70, 0.5);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 8px 16px rgba(210, 150, 60, 0.2);
     font-weight: 700;
     color: #6b3a4d;
     position: relative;
@@ -111,21 +161,34 @@ body {
 
 .level-box {
     margin-top: 16px;
-    padding: 14px 16px;
+    padding: 18px 18px;
     border-radius: 14px;
     background: #fffdf2;
     border: 1px solid rgba(235, 180, 70, 0.35);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), 0 10px 18px rgba(210, 150, 60, 0.16);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    min-height: 72px;
 }
 
+.level-box::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255, 214, 120, 0.5), transparent 65%);
+    pointer-events: none;
+}
 
 .level-label {
     font-size: 13px;
     color: #7a495d;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .level-value {
@@ -155,6 +218,21 @@ body {
     }
     100% {
         transform: translate3d(-2%, -2%, 0) rotate(0deg);
+    }
+}
+
+@keyframes sparkle-float {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-6px) scale(1.15);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
     }
 }
 
