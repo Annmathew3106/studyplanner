@@ -113,18 +113,22 @@ form.addEventListener("submit", (e) => {
 
     const existing = loadPlans();
     const editDate = localStorage.getItem(editKey);
+    const editPlan = editDate ? existing.find((plan) => plan.date === editDate) : null;
     let next = existing.filter((plan) => plan.date !== dateValue);
 
     if (editDate && editDate === dateValue) {
-        next.push({ date: dateValue, items });
+        const createdAt = editPlan?.createdAt || Date.now();
+        next.push({ date: dateValue, items, createdAt });
     } else {
         const current = existing.find((plan) => plan.date === dateValue);
         if (current) {
             const mergedItems = current.items.concat(items);
             next = next.filter((plan) => plan.date !== dateValue);
-            next.push({ date: dateValue, items: mergedItems });
+            const createdAt = editPlan?.createdAt || current.createdAt || Date.now();
+            next.push({ date: dateValue, items: mergedItems, createdAt });
         } else {
-            next.push({ date: dateValue, items });
+            const createdAt = editPlan?.createdAt || Date.now();
+            next.push({ date: dateValue, items, createdAt });
         }
     }
 

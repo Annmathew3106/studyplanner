@@ -29,7 +29,11 @@ function savePlans(plans) {
 
 function renderPlans() {
     if (!plansRoot) return;
-    const plans = loadPlans().sort((a, b) => a.date.localeCompare(b.date));
+    const plans = loadPlans().sort((a, b) => {
+        const createdDiff = (b.createdAt || 0) - (a.createdAt || 0);
+        if (createdDiff !== 0) return createdDiff;
+        return b.date.localeCompare(a.date);
+    });
     plansRoot.innerHTML = "";
     const todayKey = getTodayKey();
 
