@@ -260,6 +260,31 @@ nav a:focus-visible {
     z-index: 1;
 }
 
+.plan-status {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #fff7e5;
+    color: #7a4a1b;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+}
+
+.plan-status.status-complete {
+    background: #e6f6d5;
+    color: #2f5a1b;
+    border-color: rgba(100, 160, 70, 0.35);
+}
+
+.plan-status.status-missed {
+    background: #fff2de;
+    color: #7a4a1b;
+    border-color: rgba(200, 140, 70, 0.35);
+}
+
 .plan h3 {
     margin: 0;
     font-size: 16px;
