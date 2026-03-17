@@ -57,10 +57,6 @@ function renderPlans() {
         heading.textContent = formatPlanDate(plan.date);
         header.appendChild(heading);
 
-        const status = document.createElement("span");
-        status.className = "plan-status";
-        header.appendChild(status);
-
         const actions = document.createElement("div");
         actions.className = "plan-actions";
 
@@ -105,14 +101,6 @@ function renderPlans() {
 
         if (allDone) {
             card.classList.add("complete");
-            status.textContent = "Great job 🎉";
-            status.classList.add("status-complete");
-        } else if (isPast) {
-            card.classList.add("missed");
-            status.textContent = "Missed. Next one's yours. ✨";
-            status.classList.add("status-missed");
-        } else {
-            status.remove();
         }
 
         plansRoot.appendChild(card);
