@@ -1,6 +1,5 @@
 const rangeSelect = document.getElementById("range");
 const chartRoot = document.getElementById("chart");
-const emptyState = document.getElementById("empty");
 const weekLegend = document.getElementById("week-legend");
 const chartRow = document.querySelector(".chart-row");
 const storageKey = "studyPlans";
@@ -69,6 +68,10 @@ function getWeekKey(date) {
 function percent(done, total) {
     if (!total) return 0;
     return Math.round((done / total) * 100);
+}
+
+function hasStoredPlanData(plans) {
+    return plans.some((plan) => Array.isArray(plan.items) && plan.items.length > 0);
 }
 
 function buildDaily(plans) {
@@ -346,6 +349,7 @@ function renderWeekLegend(weeks) {
 function updateChart() {
     const plans = loadPlans();
     let data = [];
+    const hasStoredData = hasStoredPlanData(plans);
 
     const mode = rangeSelect.value;
     if (mode === "today") {
@@ -358,21 +362,21 @@ function updateChart() {
         data = buildMonthly(plans);
     }
 
-    const hasAny = data.some((row) => row.total > 0);
-    emptyState.hidden = hasAny;
-    chartRoot.hidden = !hasAny;
+    chartRoot.hidden = !hasStoredData;
 
-    if (hasAny) {
+    if (hasStoredData) {
         chartRoot.setAttribute("data-mode", mode);
         renderLineChart(chartRoot, data, "short");
+    } else {
+        chartRoot.innerHTML = "";
     }
 
-    if (chartRoot && !hasAny) {
+    if (chartRoot && !hasStoredData) {
         chartRoot.setAttribute("data-mode", mode);
     }
 
     if (weekLegend && chartRow) {
-        if (mode === "weekly" && data.length) {
+        if (mode === "weekly" && hasStoredData && data.length) {
             weekLegend.hidden = false;
             chartRow.classList.add("has-legend");
             renderWeekLegend(data);

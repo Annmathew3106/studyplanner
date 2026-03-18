@@ -13,7 +13,7 @@
     <nav>
         <ul>
             <li><a href="index.html">HOME</a></li>
-            <li><a href="progress.html">PROGRESS</a></li>
+            <li><a href="progress.html" class="active">PROGRESS</a></li>
             <li><a href="level.html">LEVEL</a></li>
             <li><a href="timetable.html">TIMETABLE</a></li>
             <li><a href="about.html">ABOUT</a></li>
@@ -24,14 +24,14 @@
 
     <div class="content">
         <div class="header-row">
-            <h1>Progress</h1>
+            <h1><span class="page-icon" aria-hidden="true">&#128200;</span>Progress</h1>
         </div>
-        <h2>Track your study consistency</h2>
+        <h2><span class="subtitle-icon" aria-hidden="true">&#10022;</span>Track your study consistency</h2>
 
         <div id="panel-current" class="progress-card">
             <div class="progress-header">
-                <div>
-                    <h3>Your Progress</h3>
+                <div class="progress-copy">
+                    <h3><span class="section-icon" aria-hidden="true">&#9684;</span>Your Progress</h3>
                     <p class="progress-subtitle">Shows how many tasks you completed over time.</p>
                 </div>
                 <div class="select-wrap">
@@ -49,7 +49,6 @@
                 <div id="chart" class="line-chart" aria-live="polite"></div>
                 <div id="week-legend" class="week-legend" aria-live="polite" hidden></div>
             </div>
-            <p id="empty" class="empty-state" hidden>No progress data yet. Add plans to see bars here.</p>
         </div>
 
     </div>
