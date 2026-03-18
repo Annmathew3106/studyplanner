@@ -126,6 +126,12 @@ nav a:focus-visible {
     outline: none;
 }
 
+nav a.active::before,
+nav a:focus-visible::before {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 154, 198, 0.35);
+}
+
 @media (max-width: 720px) {
     body {
         padding-left: 0;
