@@ -2,6 +2,7 @@ const form = document.querySelector(".form");
 const addBtn = document.querySelector(".add-btn");
 const subjects = document.querySelector(".subjects");
 const template = document.getElementById("subject-template");
+const closeBtn = document.querySelector(".close-btn");
 const storageKey = "examTimetables";
 const editKey = "editTimetableId";
 
@@ -34,6 +35,10 @@ function resetRows() {
 
 function loadTimetables() {
     return JSON.parse(localStorage.getItem(storageKey) || "[]");
+}
+
+function clearEditState() {
+    localStorage.removeItem(editKey);
 }
 
 function prefillForEdit() {
@@ -94,6 +99,10 @@ addBtn.addEventListener("click", () => {
     addRow();
 });
 
+closeBtn?.addEventListener("click", () => {
+    clearEditState();
+});
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -149,7 +158,7 @@ form.addEventListener("submit", (e) => {
     });
 
     localStorage.setItem(storageKey, JSON.stringify(nextTimetables));
-    localStorage.removeItem(editKey);
+    clearEditState();
     window.location.href = "timetable.html";
 });
 

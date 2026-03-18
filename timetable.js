@@ -1,4 +1,5 @@
 const timetableRoot = document.getElementById("timetables");
+const createLink = document.querySelector('.header-row .button');
 const storageKey = "examTimetables";
 const editKey = "editTimetableId";
 
@@ -8,6 +9,10 @@ function loadTimetables() {
 
 function saveTimetables(items) {
     localStorage.setItem(storageKey, JSON.stringify(items));
+}
+
+function clearEditState() {
+    localStorage.removeItem(editKey);
 }
 
 function formatDate(dateValue) {
@@ -151,3 +156,7 @@ timetableRoot?.addEventListener("click", (e) => {
 });
 
 renderTimetables();
+
+createLink?.addEventListener("click", () => {
+    clearEditState();
+});
