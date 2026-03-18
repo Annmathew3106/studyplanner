@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMETABLE</title>
+    <link rel="stylesheet" href="timetable.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="progress.html">PROGRESS</a></li>
+            <li><a href="level.html">LEVEL</a></li>
+            <li><a href="timetable.html">TIMETABLE</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+
+        </ul>
+    </nav>
+
+    <div class="content">
+        <div class="header-row">
+            <h1><span class="title-icon" aria-hidden="true">🗂️</span>TIMETABLE</h1>
+            <a class="button" href="timetablecreate.html"><span class="button-icon" aria-hidden="true">➕</span>CREATE</a>
+        </div>
+        <h2>Create and manage your exam timetable in one place</h2>
+
+        <div class="badge-row" aria-label="Timetable highlights">
+            <span class="badge"><span class="badge-icon" aria-hidden="true">🗓️</span>Exam Dates</span>
+            <span class="badge"><span class="badge-icon" aria-hidden="true">📘</span>Subject Slots</span>
+            <span class="badge"><span class="badge-icon" aria-hidden="true">✨</span>Quick Edits</span>
+        </div>
+
+        <section class="timetable-card" aria-label="Timetable overview">
+            <div class="card-header">
+                <div>
+                    <h3><span class="section-icon" aria-hidden="true">🎓</span>Your Exam Schedule</h3>
+                    <p class="card-subtitle">Add each subject with its exam date and time to build a clear timetable.</p>
+                </div>
+                <span class="status-pill"><span class="status-icon" aria-hidden="true">💫</span>Saved timetables</span>
+            </div>
+
+            <div id="timetables" class="timetable-list" aria-live="polite"></div>
+        </section>
+    </div>
+    <script src="timetable.js"></script>
+</body>
+
+</html>

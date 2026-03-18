@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMETABLE</title>
+    <link rel="stylesheet" href="timetablecreate.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="progress.html">PROGRESS</a></li>
+            <li><a href="level.html">LEVEL</a></li>
+            <li><a href="timetable.html">TIMETABLE</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+
+        </ul>
+    </nav>
+
+    <h1>TIME TABLE</h1>
+    <div class="badge-row" aria-label="Timetable create highlights">
+        <span class="badge"><span class="badge-icon" aria-hidden="true">🗓️</span>Exam Dates</span>
+        <span class="badge"><span class="badge-icon" aria-hidden="true">✨</span>Quick Edit</span>
+    </div>
+    <form class="form">
+        <a class="close-btn" href="timetable.html" aria-label="Close">x</a>
+        <label for="title" class="title">Title</label>
+        <input type="text" id="title" name="title" placeholder="Example: First Semester Internal Exams" required>
+
+        <div class="subjects-header">
+            <label><span class="section-icon" aria-hidden="true">🎓</span>Exam Subjects</label>
+            <div class="header-actions">
+                <button type="reset" class="button clear-btn"><span class="button-icon" aria-hidden="true">🧹</span>Clear All</button>
+                <button type="button" class="button add-btn"><span class="button-icon" aria-hidden="true">➕</span>Add Subject</button>
+            </div>
+        </div>
+
+        <div class="subjects" aria-live="polite">
+            <div class="subject-group" data-required="true">
+                <input type="text" name="subjects[]" placeholder="Subject" required>
+                <input type="date" name="dates[]" required>
+                <input type="time" name="times[]" required>
+                <button type="button" class="remove-btn" aria-label="Remove subject">Remove</button>
+            </div>
+        </div>
+
+        <p class="hint">Add all your semester exam subjects here, such as six subjects for one semester.</p>
+
+        <button type="submit" class="button primary"><span class="button-icon" aria-hidden="true">💾</span>Save Timetable</button>
+    </form>
+
+    <template id="subject-template">
+        <div class="subject-group">
+            <input type="text" name="subjects[]" placeholder="Subject">
+            <input type="date" name="dates[]">
+            <input type="time" name="times[]">
+            <button type="button" class="remove-btn" aria-label="Remove subject">Remove</button>
+        </div>
+    </template>
+
+    <script src="timetablecreate.js"></script>
+</body>
+
+</html>
