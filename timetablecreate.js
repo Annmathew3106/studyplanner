@@ -41,12 +41,17 @@ function clearEditState() {
     localStorage.removeItem(editKey);
 }
 
-function prefillForEdit() {
+function getEditId() {
     const editIdValue = localStorage.getItem(editKey);
-    if (!editIdValue) return;
+    if (editIdValue === null) return null;
 
     const editId = Number(editIdValue);
-    if (Number.isNaN(editId)) return;
+    return Number.isNaN(editId) ? null : editId;
+}
+
+function prefillForEdit() {
+    const editId = getEditId();
+    if (editId === null) return;
 
     const timetables = loadTimetables();
     const timetable = timetables.find((item) => item.id === editId);
@@ -143,15 +148,14 @@ form.addEventListener("submit", (e) => {
     }
 
     const timetables = loadTimetables();
-    const editIdValue = localStorage.getItem(editKey);
-    const editId = Number(editIdValue);
-    const nextTimetables = Number.isNaN(editId)
+    const editId = getEditId();
+    const nextTimetables = editId === null
         ? timetables
         : timetables.filter((item) => item.id !== editId);
     const existing = timetables.find((item) => item.id === editId);
 
     nextTimetables.push({
-        id: Number.isNaN(editId) ? Date.now() : editId,
+        id: editId === null ? Date.now() : editId,
         title: titleInput.value.trim(),
         exams,
         createdAt: existing?.createdAt || Date.now()
