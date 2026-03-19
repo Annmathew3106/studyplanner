@@ -55,7 +55,10 @@ function prefillForEdit() {
 
     const timetables = loadTimetables();
     const timetable = timetables.find((item) => item.id === editId);
-    if (!timetable) return;
+    if (!timetable) {
+        clearEditState();
+        return;
+    }
 
     const titleInput = document.getElementById("title");
     if (titleInput) titleInput.value = timetable.title || "";
@@ -106,6 +109,16 @@ addBtn.addEventListener("click", () => {
 
 closeBtn?.addEventListener("click", () => {
     clearEditState();
+});
+
+window.addEventListener("pageshow", () => {
+    const editId = getEditId();
+    if (editId === null) return;
+
+    const exists = loadTimetables().some((item) => item.id === editId);
+    if (!exists) {
+        clearEditState();
+    }
 });
 
 form.addEventListener("submit", (e) => {
